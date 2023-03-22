@@ -1,9 +1,13 @@
 name: Windows/Ubuntu/MacOS
 
 on:
+  workflow_dispatch:
   push:
-    paths:
-    - 'src/**'
+    branches: [ "master" ]
+    paths: [ "**.rs", "**.toml" ]
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
   build:
@@ -11,11 +15,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --workspace --exclude aida64-keys-gui --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test --workspace --exclude aida64-keys-gui --verbose
